@@ -36,17 +36,19 @@ class Image
   end
 
   def validate_size(size)
-    fail RangeError if size < MIN_SIZE || size > MAX_SIZE
+    fail RangeError, "Size #{size} should be between 1 and 255" if size < MIN_SIZE || size > MAX_SIZE
   end
 
   def validate_coords_with_image(*sizes)
     sizes.each do |size|
       validate_size(size)
-      fail RangeError if size > image.size + 1 || size > image.first.size + 1
+      fail RangeError, "#{size} is too big" if size > image.size + 1 || size > image.first.size + 1
     end
   end
 
   def validate_colour(colour)
-    fail ArgumentError unless colour =~ /[A-Z]/ && colour.size == 1
+    unless colour =~ /[A-Z]/ && colour.size == 1
+      fail ArgumentError, "#{colour} is not a valid colour"
+    end
   end
 end
