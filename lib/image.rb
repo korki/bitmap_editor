@@ -42,7 +42,7 @@ class Image
   def validate_coords_with_image(*sizes)
     sizes.each do |size|
       validate_size(size)
-      fail RangeError if size > image.size || size > image.first.size
+      fail RangeError if size > image.size + 1 || size > image.first.size + 1
     end
   end
 
