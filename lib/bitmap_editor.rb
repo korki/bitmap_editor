@@ -56,6 +56,10 @@ class BitmapEditor
   def check_params(params, required)
     (1..required).to_a.each do |i|
       fail ArgumentError, 'Wrong number of params' if params[i].nil? || params[i].to_s.empty?
+      integer_convertable = Integer(params[i]) rescue false
+      if required > 2 && i < required && integer_convertable == false
+        fail ArgumentError, 'Coordinate should be a number'
+      end
     end
   end
 end

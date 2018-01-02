@@ -26,20 +26,38 @@ describe BitmapEditor do
         editor.interpret_command('C', nil)
       end
 
-      it 'it call colour when L' do
+      it 'calls colour when L' do
         expect(editor.image).to receive(:colour)
         editor.interpret_command('L', ['L', 1, 1, 'A'])
       end
 
-      it 'it call vertical when V' do
+      it 'calls vertical when V' do
         expect(editor.image).to receive(:vertical)
         editor.interpret_command('V', ['V', 1, 1, 1, 'A'])
       end
 
-      it 'it call horizontal when V' do
+      it 'calls horizontal when V' do
         expect(editor.image).to receive(:horizontal)
         editor.interpret_command('H', ['H', 1, 1, 1, 'A'])
       end
+
+      it 'prints image when S' do
+        expect(STDOUT).to receive(:puts)
+        expect(editor.image).to receive(:to_s)
+        editor.interpret_command('S', nil)
+      end
+    end
+  end
+
+  describe 'check params' do
+    let(:editor) { described_class.new }
+
+    it 'fails when less params than required' do
+      expect { editor.check_params([1], 2) }.to raise_error(ArgumentError)
+    end
+
+    it 'fails when coordinate is a letter' do
+      expect { editor.check_params(['a', 'A'], 2) }.to raise_error(ArgumentError)
     end
   end
 end
