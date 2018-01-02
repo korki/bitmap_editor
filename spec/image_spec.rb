@@ -10,7 +10,15 @@ describe Image do
   end
 
   describe 'initialize' do
-    it 'returns exception when size is too big'
+    it 'returns exception when any size is too big' do
+      expect { described_class.new(2, 300) }.to raise_error(RangeError)
+      expect { described_class.new(300, 2) }.to raise_error(RangeError)
+    end
+
+    it 'returns exception when any size is too small' do
+      expect { described_class.new(-1, 2) }.to raise_error(RangeError)
+      expect { described_class.new(2, -1) }.to raise_error(RangeError)
+    end
 
     it 'creates image array with correct size' do
       expect(subject.size).to eq 2
@@ -29,7 +37,10 @@ describe Image do
   end
 
   describe 'clear' do
-    it 'returns exception when no image exists'
+    it 'returns exception when no image exists' do
+      image.image = nil
+      expect { image.clear }.to raise_error(NoMethodError)
+    end
 
     it 'fills existing image with zeros' do
       image.clear
@@ -42,8 +53,17 @@ describe Image do
   end
 
   describe 'colour' do
-    it 'returns exception when colour doesnt exist'
-    it 'returns exception when coordinates arre out of bounds'
+    it 'returns exception when colour doesnt exist' do
+      expect { image.colour(1, 1, 'Green') }.to raise_error(ArgumentError)
+      expect { image.colour(1, 1, '4') }.to raise_error(ArgumentError)
+      expect { image.colour(1, 1, 4) }.to raise_error(ArgumentError)
+    end
+
+    it 'returns exception when any coordinate is out of bounds' do
+      expect { image.colour(1, 300, 'A') }.to raise_error(RangeError)
+      expect { image.colour(300, 1, 'A') }.to raise_error(RangeError)
+    end
+
     it 'paints given point with given colour' do
       image.colour(1, 1, 'A')
       expect(subject[0][0]).to eq 'A'
@@ -51,7 +71,12 @@ describe Image do
   end
 
   describe 'vertical' do
-    it 'returns expception when line is out of bounds'
+    it 'returns expception when line is out of bounds' do
+      expect { image.vertical(300, 1, 2, 'A') }.to raise_error(RangeError)
+      expect { image.vertical(1, 1, 300, 'A') }.to raise_error(RangeError)
+      expect { image.vertical(1, 300, 2, 'A') }.to raise_error(RangeError)
+    end
+
     it 'paints given line coordinates with given colour' do
       image.vertical(1, 1, 2, 'A')
       expect(subject[0][0]).to eq 'A'
@@ -60,7 +85,12 @@ describe Image do
   end
 
   describe 'horizontal' do
-    it 'returns expception when line is out of bounds'
+    it 'returns expception when line is out of bounds' do
+      expect { image.horizontal(300, 1, 2, 'A') }.to raise_error(RangeError)
+      expect { image.horizontal(1, 1, 300, 'A') }.to raise_error(RangeError)
+      expect { image.horizontal(1, 300, 2, 'A') }.to raise_error(RangeError)
+    end
+
     it 'paints given line coordinates with given colour' do
       image.horizontal(1, 2, 1, 'A')
       expect(subject[0][0]).to eq 'A'
