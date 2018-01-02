@@ -5,9 +5,7 @@ describe Image do
     @image ||= described_class.new(2, 3)
   end
 
-  def subject
-    image.image
-  end
+  subject { image.image }
 
   describe 'initialize' do
     it 'returns exception when any size is too big' do
@@ -95,6 +93,12 @@ describe Image do
       image.horizontal(1, 2, 1, 'A')
       expect(subject[0][0]).to eq 'A'
       expect(subject[0][1]).to eq 'A'
+    end
+  end
+
+  describe 'to_s' do
+    it 'converts image arrays into printable version' do
+      expect(image.to_s).to eq %w(000 000)
     end
   end
 end

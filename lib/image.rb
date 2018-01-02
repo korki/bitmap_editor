@@ -16,22 +16,31 @@ class Image
   end
 
   def colour(x, y, colour)
-    validate_coords_with_image(x, y)
+    validate_horizontal_coords(x)
+    validate_vertical_coords(y)
     validate_colour(colour)
     @image[y - 1][x - 1] = colour
   end
 
   def vertical(x, y1, y2, colour)
-    validate_coords_with_image(x, y1, y2)
+    validate_horizontal_coords(x)
+    validate_vertical_coords(y1, y2)
     (y1..y2).to_a.each do |y|
       colour(x, y, colour)
     end
   end
 
   def horizontal(x1, x2, y, colour)
-    validate_coords_with_image(x1, x2, y)
+    validate_horizontal_coords(x1, x2)
+    validate_vertical_coords(y)
     (x1..x2).to_a.each do |x|
       colour(x, y, colour)
+    end
+  end
+
+  def to_s
+    @image.map do |row|
+      row.join('')
     end
   end
 
@@ -39,10 +48,21 @@ class Image
     fail RangeError, "Size #{size} should be between 1 and 255" if size < MIN_SIZE || size > MAX_SIZE
   end
 
-  def validate_coords_with_image(*sizes)
-    sizes.each do |size|
-      validate_size(size)
-      fail RangeError, "#{size} is too big" if size > image.size + 1 || size > image.first.size + 1
+  def validate_positive_coords(*coords)
+    fail RangeError, "Coordinates can't be negative" if coords.any? { |c| c.first < 0 }
+  end
+
+  def validate_vertical_coords(*coords)
+    validate_positive_coords(coords)
+    coords.each do |coord|
+      fail RangeError, "#{coord} is too big" if coord > image.size
+    end
+  end
+
+  def validate_horizontal_coords(*coords)
+    validate_positive_coords(coords)
+    coords.each do |coord|
+      fail RangeError, "#{coord} is too big" if coord > image.first.size
     end
   end
 
